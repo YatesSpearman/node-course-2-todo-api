@@ -41,20 +41,16 @@ app.get('/todos/:id', (req, res) => {
         return res.status(404).send();
     }
   //findById
-  Todo.findById(id).then((todo) => {
+  Todo.findByIdAndRemove(id).then((todo) => {
     if(!todo){
       res.status(404).send();
-    } else {
-    res.send({todo});
     }
-  }, (e) => {
+    res.send(todo);
+
+  }).catch((e) => {
     res.status(400).send();
   });
-    //success
-      //if todo-send back
-      //if no todo -send back 404 with an empty body
-    //error
-      //400 -send nothing
+    
 });
 
 // app.post('/users', (req, res) => {
@@ -68,6 +64,27 @@ app.get('/todos/:id', (req, res) => {
 //     res.status(400).send(e);
 //   });
 // });
+
+app.delete('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)) {
+      return res.status(404).send();
+  }
+
+  Todo.findByIdAndRemove(id).then((doc) => {
+    if(!doc) {
+      res.status(404).send();
+    } else {
+      res.send({doc});
+    }
+
+  }, (e) => {
+    res.status(400).send();
+  })
+
+
+});
 
 
 
